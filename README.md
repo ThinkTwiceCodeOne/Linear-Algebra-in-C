@@ -8,5 +8,6 @@ Right now it has
 4. Determinant of matrix
 5. Trace of matrix
 6. Transpose of matrix
+7. Inverse of matric (Gauss Jordan Method)
 
 I'll keep adding more 
