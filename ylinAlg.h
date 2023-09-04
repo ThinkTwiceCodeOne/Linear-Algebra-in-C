@@ -377,15 +377,15 @@ int **addMatrix(int **matrix1, int **matrix2, int r1, int c1, int r2, int c2)
     }
     return result;
 }
-int **subtractMatrix(int **matrix1, int **matrix2, int r1, int c1, int r2, int c2)
+double **subtractMatrix(double **matrix1, double **matrix2, int r1, int c1, int r2, int c2)
 {
-    int **result;
+    double **result;
     if (r1 == r2 && c1 == c2)
     {
-        result = (int **)malloc(r1 * sizeof(int *));
+        result = (double **)malloc(r1 * sizeof(double *));
         for (int i = 0; i < r1; i++)
         {
-            result[i] = (int *)malloc(c1 * sizeof(int));
+            result[i] = (double *)malloc(c1 * sizeof(double));
         }
         for (int i = 0; i < r1; i++)
         {
@@ -402,21 +402,39 @@ int **subtractMatrix(int **matrix1, int **matrix2, int r1, int c1, int r2, int c
     }
     return result;
 }
-int **multiplyMatrix(int **matrix1, int **matrix2, int r1, int c1, int r2, int c2)
+double **multiplyByScalar(double **matrix1, int r1, int c1,double k)
 {
-    int **result;
-    if (c1 == r2)
-    {
-        result = (int **)malloc(r1 * sizeof(int *));
+    double **result;
+    
+        result = (double **)malloc(r1 * sizeof(double *));
         for (int i = 0; i < r1; i++)
         {
-            result[i] = (int *)malloc(c2 * sizeof(int));
+            result[i] = (double *)malloc(c1 * sizeof(double));
         }
-        for (int i = 0; i < c1; i++)
+        for (int i = 0; i < r1; i++)
         {
             for (int j = 0; j < c1; j++)
             {
-                for (int k = 0; k < c1; k++)
+                result[j][i] = matrix1[i][j]*k;
+            }
+        }
+    return result;
+}
+double **multiplyMatrix(double **matrix1, double **matrix2, int r1, int c1, int r2, int c2)
+{
+    double **result;
+    if (c1 == r2)
+    {
+        result = (double **)malloc(r1 * sizeof(double *));
+        for (int i = 0; i < r1; i++)
+        {
+            result[i] = (double *)malloc(c2 * sizeof(double));
+        }
+        for (int i = 0; i < r1; i++)
+        {
+            for (int j = 0; j < c2; j++)
+            {
+                for (int k = 0; k < r2; k++)
                 {
                     result[j][i] += matrix1[j][k] * matrix2[k][i];
                 }
@@ -430,12 +448,12 @@ int **multiplyMatrix(int **matrix1, int **matrix2, int r1, int c1, int r2, int c
     }
     return result;
 }
-int **transpose(int **matrix1, int r1, int c1)
+double **transpose(double **matrix1, int r1, int c1)
 {
-    int **result = (int **)malloc(c1 * sizeof(int *));
+    double **result = (double **)malloc(c1 * sizeof(double *));
     for (int i = 0; i < c1; i++)
     {
-        result[i] = (int *)malloc(r1 * sizeof(int));
+        result[i] = (double *)malloc(r1 * sizeof(double));
     }
     for (int i = 0; i < r1; i++)
     {
@@ -444,5 +462,58 @@ int **transpose(int **matrix1, int r1, int c1)
             result[j][i] = matrix1[i][j];
         }
     }
+    return result;
+}
+double** covariance(int** matrix,int r,int c)
+{
+    double **meanMatrix = (double **)malloc(r * sizeof(double *));
+    for (int i = 0; i < r; i++)
+    {
+        meanMatrix[i] = (double *)malloc(sizeof(double));
+    }
+    for(int i=0;i<r;i++)
+    {
+        double sum=0.0;
+        for(int j=0;j<c;j++)
+        {
+            sum=sum+(double)matrix[i][j];
+        }
+        meanMatrix[i][0]=(double)sum/c;
+    
+    }
+
+    double **matrix1 = (double **)malloc(c * sizeof(double *));
+    for (int i = 0; i < c; i++)
+    {
+        matrix1[i] = (double *)malloc(r * sizeof(double));
+    }
+    double **matrix2 = (double **)malloc(c * sizeof(double *));
+    for (int i = 0; i < c; i++)
+    {
+        matrix2[i] = (double *)malloc(r * sizeof(double));
+    }
+    for(int i=0;i<r;i++)
+    {
+        for(int j=0;j<c;j++)
+        {
+            matrix1[i][j]=(double)matrix[i][j];
+        }
+    }
+    double **result = (double **)malloc(r * sizeof(double *));
+    for (int i = 0; i < r; i++)
+    {
+        result[i] = (double *)malloc(r * sizeof(double));
+    }
+    double scalar=(double)1/c;
+    double **meanTranspose = (double **)malloc(1 * sizeof(double *));
+    for (int i = 0; i < 1; i++)
+    {
+        meanTranspose[i] = (double *)malloc(r*sizeof(double));
+    }
+    meanTranspose=transpose(meanMatrix,r,1);
+    matrix2=transpose(matrix1,r,c);
+    
+    result=subtractMatrix(multiplyByScalar(multiplyMatrix(matrix1,matrix2,r,c,c,r),r,r,scalar),multiplyMatrix(meanMatrix,meanTranspose,r,1,1,r),r,r,r,r);
+    
     return result;
 }
