@@ -10,5 +10,6 @@ Right now it has
 6. Transpose of matrix
 7. Inverse of matric (Gauss Jordan Method)
 8. Roots of linear equations (Gauss Jordan Method)
+9. Rank of matrix
 
 I'll keep adding more 
