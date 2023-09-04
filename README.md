@@ -11,5 +11,7 @@ Right now it has
 7. Inverse of matric (Gauss Jordan Method)
 8. Roots of linear equations (Gauss Jordan Method)
 9. Rank of matrix
-
+10. Covariance of matrix
+11. MultiplyByScalar
+    
 I'll keep adding more 
